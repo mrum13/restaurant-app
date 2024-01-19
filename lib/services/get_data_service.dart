@@ -7,6 +7,7 @@ class GetDataServices {
     var dataJson = jsonDecode(jsonString);
 
     try {
+
       RestaurantModel data = RestaurantModel.fromJson(dataJson);
 
       return data;

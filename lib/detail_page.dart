@@ -1,18 +1,23 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/academy.dart';
 import 'package:restaurant_app/model/restaurant_model.dart';
 import 'package:restaurant_app/widgets/card_facility.dart';
 
 class DetailPage extends StatelessWidget {
-  final int index;
-  final RestaurantModel dataDetail;
+  final Restaurant dataDetail;
 
-  const DetailPage({super.key, required this.index, required this.dataDetail});
+  const DetailPage({super.key, required this.dataDetail});
 
   @override
   Widget build(BuildContext context) {
+
+    var listPictureDrink = ['assets/img_minuman_1.png','assets/img_minuman_2.png','assets/img_minuman_3.png'];
+    var listPictureFood = ['assets/img_makanan_1.png','assets/img_makanan_2.png','assets/img_makanan_3.png','assets/img_makanan_4.png','assets/img_makanan_5.png'];
+
+    final random = new Random();
     
-    Widget buildTile(RestaurantModel restaurantModel) {
+    Widget buildTileFood(Food foodMenu) {
       return Container(
         width: 155,
         height: 200,
@@ -33,8 +38,8 @@ class DetailPage extends StatelessWidget {
             ClipRRect(
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(14), topRight: Radius.circular(14)),
-              child: Image.network(
-                dataDetail.restaurants![index].pictureId!,
+              child: Image.asset(
+                listPictureFood[random.nextInt(listPictureFood.length)],
                 fit: BoxFit.cover,
               ),
             ),
@@ -43,13 +48,63 @@ class DetailPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(dataDetail.restaurants![index].menus.foods[],
-                    style: TextStyle(
+                  Text(foodMenu.name!,
+                    style: const TextStyle(
                       fontSize: 12
                     ),
                   ),
-                  Text(
-                    "subtitle",
+                  const Text(
+                    "Rp.20.000",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      );
+    }
+
+    Widget buildTileDrink(Drink drinkMenu) {
+      return Container(
+        width: 155,
+        height: 200,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3), // Warna shadow
+                spreadRadius: 2, // Radius penyebaran shadow
+                blurRadius: 7, // Radius blur shadow
+                offset: const Offset(3, 3), // Perpindahan shadow
+              ),
+            ],
+            borderRadius: BorderRadius.circular(14)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(14), topRight: Radius.circular(14)),
+              child: Image.asset(
+                listPictureDrink[random.nextInt(listPictureDrink.length)],
+                fit: BoxFit.cover,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(drinkMenu.name!,
+                    style: const TextStyle(
+                      fontSize: 12
+                    ),
+                  ),
+                  const Text(
+                    "Rp.20.000",
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey),
@@ -70,7 +125,7 @@ class DetailPage extends StatelessWidget {
             Column(
               children: [
                 Image.network(
-                  dataDetail.restaurants![index].pictureId!,
+                  dataDetail.pictureId!,
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: 300,
@@ -87,7 +142,7 @@ class DetailPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                dataDetail.restaurants![index].name!,
+                                dataDetail.name!,
                                 style: const TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.w600),
                               ),
@@ -105,7 +160,7 @@ class DetailPage extends StatelessWidget {
                                     width: 4,
                                   ),
                                   Text(
-                                    dataDetail.restaurants![index].city!,
+                                    dataDetail.city!,
                                     style: const TextStyle(
                                         color: Colors.grey, fontSize: 12),
                                   )
@@ -122,7 +177,7 @@ class DetailPage extends StatelessWidget {
                               const SizedBox(
                                 width: 4,
                               ),
-                              Text(dataDetail.restaurants![index].rating.toString())
+                              Text(dataDetail.rating.toString())
                             ],
                           )
                         ],
@@ -138,9 +193,9 @@ class DetailPage extends StatelessWidget {
                       const SizedBox(
                         height: 8,
                       ),
-                      const Text(
-                        "Deskripsi dari restaurant",
-                        style: TextStyle(
+                      Text(
+                        dataDetail.description!,
+                        style: const TextStyle(
                             color: Colors.grey,
                             fontSize: 12,
                             fontWeight: FontWeight.w400),
@@ -181,7 +236,30 @@ class DetailPage extends StatelessWidget {
                             crossAxisSpacing: 12,
                             mainAxisSpacing: 12,
                             crossAxisCount: 2,
-                            children: dataDetail.restaurants![index].menus.foods.map(buildTile).toList(),
+                            children: dataDetail.menus!.foods!.map(buildTileFood).toList(),
+                          )
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 24,
+                      ),
+                      const Text(
+                        "Menu Minuman",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      CustomScrollView(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        slivers: [
+                          SliverGrid.count(
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                            crossAxisCount: 2,
+                            children: dataDetail.menus!.drinks!.map(buildTileDrink).toList(),
                           )
                         ],
                       )

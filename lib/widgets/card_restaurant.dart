@@ -24,7 +24,7 @@ class CardRestaurant extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => DetailPage(index: index, dataDetail: data)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => DetailPage(dataDetail: data.restaurants![index])));
       },
       child: Container(
         padding: const EdgeInsets.all(10),
