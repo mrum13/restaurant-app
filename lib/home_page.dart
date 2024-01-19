@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_app/model/restaurant_model.dart';
+import 'package:restaurant_app/services/get_data_service.dart';
+import 'package:restaurant_app/widgets/card_restaurant.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: SafeArea(
           child: Padding(
@@ -32,89 +36,28 @@ class HomePage extends StatelessWidget {
             const SizedBox(
               height: 24,
             ),
-            InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, '/detail');
+            FutureBuilder<String>(
+              future: DefaultAssetBundle.of(context).loadString('assets/local_restaurant.json'),
+              builder: (context, snapshot) {
+                final RestaurantModel dataRestaurant = GetDataServices().getDataRestaurant(snapshot.data!);
+                return Expanded(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return CardRestaurant(
+                        data: dataRestaurant,
+                        image: dataRestaurant.restaurants![index].pictureId!, 
+                        title: dataRestaurant.restaurants![index].name!, 
+                        location: dataRestaurant.restaurants![index].city!, 
+                        rating: dataRestaurant.restaurants![index].rating.toString(), 
+                        index: index
+                      );
+                    }, 
+                    separatorBuilder: (context, index) => const SizedBox(height: 16,), 
+                    itemCount: dataRestaurant.restaurants!.length
+                  ),
+                );
               },
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3), // Warna shadow
-                      spreadRadius: 2, // Radius penyebaran shadow
-                      blurRadius: 7, // Radius blur shadow
-                      offset: const Offset(3, 3), // Perpindahan shadow
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: Image.asset(
-                            "assets/img_restaurant_1.png",
-                            height: 70,
-                            width: 70,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 16,
-                        ),
-                        const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                             Text(
-                              "Rumah makan",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600),
-                            ),
-                             SizedBox(
-                              height: 4,
-                            ),
-                            Row(
-                              children: [
-                                 Icon(
-                                  Icons.location_on_outlined,
-                                  size: 16,
-                                  color: Colors.grey,
-                                ),
-                                 SizedBox(
-                                  width: 4,
-                                ),
-                                Text(
-                                  "Kecamatan Enrekang",
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 12),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.star,
-                          color: Colors.amber[400],
-                        ),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        Text("4.8")
-                      ],
-                    )
-                  ],
-                ),
-              ),
             )
           ],
         ),

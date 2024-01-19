@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/detail_page.dart';
 import 'package:restaurant_app/home_page.dart';
+import 'package:restaurant_app/model/restaurant_model.dart';
 import 'package:restaurant_app/splash_page.dart';
 
 void main() {
@@ -19,13 +20,11 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const SplashPage(),
         '/home': (context) => const HomePage(),
-        '/detail':(context) => const DetailPage()
       },
     ):MaterialApp(
       routes: {
         '/': (context) => const SplashPage(),
         '/home': (context) => const HomePage(),
-        '/detail':(context) => const DetailPage()
       },
     );
   }

@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/academy.dart';
+import 'package:restaurant_app/model/restaurant_model.dart';
 import 'package:restaurant_app/widgets/card_facility.dart';
 
 class DetailPage extends StatelessWidget {
-  const DetailPage({super.key});
+  final int index;
+  final RestaurantModel dataDetail;
+
+  const DetailPage({super.key, required this.index, required this.dataDetail});
 
   @override
   Widget build(BuildContext context) {
-    Widget buildTile(Academy academy) {
+    
+    Widget buildTile(RestaurantModel restaurantModel) {
       return Container(
         width: 155,
+        height: 200,
         decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: [
@@ -27,8 +33,8 @@ class DetailPage extends StatelessWidget {
             ClipRRect(
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(14), topRight: Radius.circular(14)),
-              child: Image.asset(
-                "assets/img_makanan_1.png",
+              child: Image.network(
+                dataDetail.restaurants![index].pictureId!,
                 fit: BoxFit.cover,
               ),
             ),
@@ -37,10 +43,16 @@ class DetailPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Makanan 1'),
+                  Text(dataDetail.restaurants![index].menus.foods[],
+                    style: TextStyle(
+                      fontSize: 12
+                    ),
+                  ),
                   Text(
                     "subtitle",
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey),
                   )
                 ],
               ),
@@ -57,8 +69,8 @@ class DetailPage extends StatelessWidget {
             
             Column(
               children: [
-                Image.asset(
-                  "assets/img_restaurant_1.png",
+                Image.network(
+                  dataDetail.restaurants![index].pictureId!,
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: 300,
@@ -74,9 +86,9 @@ class DetailPage extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                "Rumah makan",
-                                style: TextStyle(
+                              Text(
+                                dataDetail.restaurants![index].name!,
+                                style: const TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.w600),
                               ),
                               const SizedBox(
@@ -93,8 +105,8 @@ class DetailPage extends StatelessWidget {
                                     width: 4,
                                   ),
                                   Text(
-                                    "Kecamatan Enrekang",
-                                    style: TextStyle(
+                                    dataDetail.restaurants![index].city!,
+                                    style: const TextStyle(
                                         color: Colors.grey, fontSize: 12),
                                   )
                                 ],
@@ -110,7 +122,7 @@ class DetailPage extends StatelessWidget {
                               const SizedBox(
                                 width: 4,
                               ),
-                              Text("4.8")
+                              Text(dataDetail.restaurants![index].rating.toString())
                             ],
                           )
                         ],
@@ -126,7 +138,7 @@ class DetailPage extends StatelessWidget {
                       const SizedBox(
                         height: 8,
                       ),
-                      Text(
+                      const Text(
                         "Deskripsi dari restaurant",
                         style: TextStyle(
                             color: Colors.grey,
@@ -169,7 +181,7 @@ class DetailPage extends StatelessWidget {
                             crossAxisSpacing: 12,
                             mainAxisSpacing: 12,
                             crossAxisCount: 2,
-                            children: flutterPaths.map(buildTile).toList(),
+                            children: dataDetail.restaurants![index].menus.foods.map(buildTile).toList(),
                           )
                         ],
                       )
@@ -192,13 +204,10 @@ class DetailPage extends StatelessWidget {
                       shape: BoxShape.circle,
                       color: Colors.black38
                     ),
-                    child: const Align(
-                      alignment: Alignment.center,
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white,
-                        size: 24,
-                      ),
+                    child: Image.asset("assets/ic_back.png",
+                      height: 24,
+                      width: 24,
+                      color: Colors.white,
                     ),
                   ),
                 ),
