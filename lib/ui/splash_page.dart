@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/services/get_data_service.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});

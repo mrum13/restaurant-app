@@ -1,30 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/detail_page.dart';
-import 'package:restaurant_app/model/restaurant_model.dart';
+import 'package:restaurant_app/common/common_url.dart';
+import 'package:restaurant_app/model/restaurant.dart';
 
 class CardRestaurant extends StatelessWidget {
-  final RestaurantModel data;
-  final String image;
-  final String title;
-  final String location;
-  final String rating;
-  final int index;
+  final RestaurantElement restaurantElement;
 
   const CardRestaurant({
     super.key,
-    required this.data,
-    required this.image,
-    required this.title,
-    required this.location,
-    required this.rating,
-    required this.index
+    required this.restaurantElement
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => DetailPage(dataDetail: data.restaurants![index])));
+        // Navigator.push(context, MaterialPageRoute(builder: (context) => DetailPage(dataDetail: data.restaurants![index])));
       },
       child: Container(
         padding: const EdgeInsets.all(10),
@@ -37,7 +27,7 @@ class CardRestaurant extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: Image.network(
-                image,
+                "$imageUrlMedium/${restaurantElement.pictureId}",
                 height: 70,
                 width: 70,
                 fit: BoxFit.fill,
@@ -51,7 +41,7 @@ class CardRestaurant extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    restaurantElement.name!,
                     style:
                         const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
@@ -69,7 +59,7 @@ class CardRestaurant extends StatelessWidget {
                         width: 4,
                       ),
                       Text(
-                        location,
+                        restaurantElement.city!,
                         style: const TextStyle(color: Colors.grey, fontSize: 12),
                       )
                     ],
@@ -85,7 +75,7 @@ class CardRestaurant extends StatelessWidget {
             const SizedBox(
               width: 4,
             ),
-            Text(rating)
+            Text(restaurantElement.rating.toString())
           ],
         ),
       ),
