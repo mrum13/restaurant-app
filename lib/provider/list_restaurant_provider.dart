@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_app/model/restaurant.dart';
 import 'package:restaurant_app/services/api_services.dart';
 
-enum ResultState { loading, noData, hasData, error }
+enum ResultState { loading, noData, hasData, error, init }
 
 class ListRestaurantProvider extends ChangeNotifier {
 
-  ListRestaurantProvider() {
-    fetchListRestaurant();
-  }
+  // ListRestaurantProvider() {
+  //   fetchListRestaurant();
+  // }
 
   late Restaurant _restaurant;
-  late ResultState _state;
+  ResultState _state = ResultState.init;
   String _message = '';
  
   String get message => _message;
@@ -37,7 +37,7 @@ class ListRestaurantProvider extends ChangeNotifier {
     } catch (e) {
       _state = ResultState.error;
       notifyListeners();
-      return _message = 'Error --> $e';
+      return _message = '$e';
     }
   }
 

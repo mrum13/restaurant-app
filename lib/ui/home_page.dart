@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/model/restaurant.dart';
-import 'package:restaurant_app/services/api_services.dart';
+import 'package:provider/provider.dart';
+import 'package:restaurant_app/provider/list_restaurant_provider.dart';
 import 'package:restaurant_app/widgets/card_no_network.dart';
 import 'package:restaurant_app/widgets/card_restaurant.dart';
 
@@ -12,13 +12,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late Future<Restaurant> _restaurant;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _restaurant = ApiServices().getListRestaurant();
   }
 
   @override
@@ -64,47 +61,39 @@ class _HomePageState extends State<HomePage> {
               height: 24,
             ),
             Expanded(
-              child: FutureBuilder<Restaurant>(
-                future: _restaurant,
-                builder: (context, AsyncSnapshot<Restaurant> snapshot) {
-                  var state = snapshot.connectionState;
-                  if (state == ConnectionState.active) {
-                    return const Center(
-                      child: Text("Mohon aktifkan Wi-Fi atau Data Seluler"),
-                    );
-                  } else if (state == ConnectionState.waiting) {
+              child: Consumer<ListRestaurantProvider>(
+                builder: (context, ListRestaurantProvider data, snapshot) {
+                  if (data.state == ResultState.loading) {
                     return const Center(child: CircularProgressIndicator());
-                  } else if (state == ConnectionState.done) {
-                    if (snapshot.hasData) {
-                      return ListView.separated(
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            var dataRestaurant =
-                                snapshot.data?.restaurants[index];
-                            return CardRestaurant(
-                              restaurantElement: dataRestaurant!,
-                            );
-                          },
-                          separatorBuilder: (context, index) => const SizedBox(
-                                height: 16,
-                              ),
-                          itemCount: snapshot.data!.restaurants.length);
-                    } else if (snapshot.hasError) {
-                      if (snapshot.error.toString().contains("jaringan")) {
-                        return CardNoNetwork(message: snapshot.error.toString(),);
+                  } else if (data.state == ResultState.noData) {
+                    return const Center(
+                      child: Text("Tidak ada data"),
+                    );
+                  } else if (data.state == ResultState.hasData) {
+                    return ListView.separated(
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        var dataRestaurant =
+                            data.result.restaurants[index];
+                        return CardRestaurant(
+                          restaurantElement: dataRestaurant,
+                        );
+                      },
+                      separatorBuilder: (context, index) => const SizedBox(
+                            height: 16,
+                          ),
+                      itemCount: data.result.restaurants.length);
+                  } else if (data.state == ResultState.error) {
+                    if (data.message.toString().contains("jaringan")) {
+                        return CardNoNetwork(message: data.message,);
                       } else {
                         return Center(
-                          child: Text(snapshot.error.toString()),
+                          child: Text(data.message.toString()),
                         );
                       }
-                    } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
                   } else {
-                    return const Center(
-                      child: Text("Error"),
+                    return Center(
+                      child: Text(data.message),
                     );
                   }
                 },

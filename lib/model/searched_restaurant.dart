@@ -38,7 +38,7 @@ class RestaurantList {
     String? description;
     String? pictureId;
     String? city;
-    double? rating;
+    dynamic rating;
 
     RestaurantList({
         this.id,

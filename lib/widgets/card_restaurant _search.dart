@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/common/common_url.dart';
-import 'package:restaurant_app/model/restaurant.dart';
+import 'package:restaurant_app/model/searched_restaurant.dart';
 import 'package:restaurant_app/provider/detail_restaurant_provider.dart';
 
-class CardRestaurant extends StatelessWidget {
-  final RestaurantElement restaurantElement;
+class CardRestaurantSearch extends StatelessWidget {
+  final RestaurantList restaurantElement;
 
-  const CardRestaurant({
+  const CardRestaurantSearch({
     super.key,
     required this.restaurantElement
   });

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_app/model/searched_restaurant.dart';
 import 'package:restaurant_app/services/api_services.dart';
 
-enum ResultState { loading, noData, hasData, error }
+enum ResultState { loading, noData, hasData, error, init }
 
 class ListRestaurantSearchedProvider extends ChangeNotifier {
 
@@ -11,7 +11,7 @@ class ListRestaurantSearchedProvider extends ChangeNotifier {
   // }
 
   late SearchedRestaurant _restaurant;
-  late ResultState _state;
+  ResultState _state = ResultState.init;
   String _message = '';
  
   String get message => _message;
@@ -20,7 +20,7 @@ class ListRestaurantSearchedProvider extends ChangeNotifier {
  
   ResultState get state => _state;
  
-  Future<dynamic> _fetchListRestaurantSearched({required String value}) async {
+  Future<dynamic> fetchListRestaurantSearched({required String value}) async {
     try {
       _state = ResultState.loading;
       notifyListeners();

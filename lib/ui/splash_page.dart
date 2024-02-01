@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:restaurant_app/provider/list_restaurant_provider.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -12,7 +14,6 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     controller = AnimationController(
@@ -21,6 +22,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     )..addListener(() {
         setState(() {
           if (controller.value == 1.0) {
+            context.read<ListRestaurantProvider>().fetchListRestaurant();
             Navigator.pushReplacementNamed(context, '/home');
           } else {
             null;

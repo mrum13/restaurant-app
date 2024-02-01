@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:restaurant_app/common/common_url.dart';
+import 'package:restaurant_app/model/detail_restaurant.dart';
 import 'package:restaurant_app/model/restaurant.dart';
 import 'package:http/http.dart' as http;
 import 'package:restaurant_app/model/searched_restaurant.dart';
@@ -59,6 +60,37 @@ class ApiServices {
 
         if (response.statusCode == 200) {
           return SearchedRestaurant.fromJson(data);
+        } else {
+          throw data['message'];
+        }
+      } catch (e) {
+        rethrow;
+      }
+    }
+  }
+
+  Future<DetailRestaurant> getDetailRestaurant({required String id}) async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+
+    if (connectivityResult == ConnectivityResult.none) {
+      throw "Terdapat masalah pada jaringan";
+    } else {
+      try {
+        var url = '$baseUrl/detail/$id';
+        var header = {
+          'Accept': 'application/json',
+        };
+        var response = await http.get(
+          Uri.parse(url),
+          headers: header,
+
+        );
+        var data = jsonDecode(response.body);
+
+        print("Status get detail restaurant : ${response.statusCode}");
+
+        if (response.statusCode == 200) {
+          return DetailRestaurant.fromJson(data);
         } else {
           throw data['message'];
         }
