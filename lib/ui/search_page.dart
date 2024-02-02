@@ -1,15 +1,17 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/provider/list_restaurant_searched_provider.dart';
 import 'package:restaurant_app/widgets/card_restaurant%20_search.dart';
-import 'package:restaurant_app/widgets/card_restaurant.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController searchController = TextEditingController(text: "");
+    TextEditingController searchController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
@@ -26,10 +28,10 @@ class SearchPage extends StatelessWidget {
                     Icons.search,
                     color: Colors.grey,
                   ),
-                  enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.grey, width: 1),
-                      borderRadius: BorderRadius.circular(16)),
+                  // enabledBorder: OutlineInputBorder(
+                  //     borderSide:
+                  //         const BorderSide(color: Colors.grey, width: 1),
+                  //     borderRadius: BorderRadius.circular(16)),
                   focusedBorder: OutlineInputBorder(
                       borderSide:
                           const BorderSide(color: Colors.grey, width: 1),
@@ -38,9 +40,12 @@ class SearchPage extends StatelessWidget {
                   hintStyle: const TextStyle(color: Colors.grey)),
               controller: searchController,
               onFieldSubmitted: (value) {
-                context
+                if (value.isNotEmpty) {
+                  context
                     .read<ListRestaurantSearchedProvider>()
                     .fetchListRestaurantSearched(value: value);
+                }
+                
               },
             ),
             const SizedBox(

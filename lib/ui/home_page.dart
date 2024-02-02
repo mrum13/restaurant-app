@@ -44,6 +44,7 @@ class _HomePageState extends State<HomePage> {
                     icon: const Icon(
                       Icons.search,
                       size: 36,
+                      color: Colors.grey,
                     ))
               ],
             ),
