@@ -190,9 +190,14 @@ class DetailPage extends StatelessWidget {
                                   ),
                                   Text(data.result.rating.toString()),
                                   const SizedBox(width: 12,),
-                                  Icon(
-                                    Icons.favorite_border,
-                                    color: Colors.grey,
+                                  InkWell(
+                                    onTap: () {
+                                      
+                                    },
+                                    child: Icon(
+                                      Icons.favorite_border,
+                                      color: Colors.grey,
+                                    ),
                                   )
                                 ],
                               )
