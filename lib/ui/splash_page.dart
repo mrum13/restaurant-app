@@ -23,7 +23,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
         setState(() {
           if (controller.value == 1.0) {
             context.read<ListRestaurantProvider>().fetchListRestaurant();
-            Navigator.pushReplacementNamed(context, '/home');
+            Navigator.pushReplacementNamed(context, '/main');
           } else {
             null;
           }

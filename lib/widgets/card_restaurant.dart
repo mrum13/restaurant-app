@@ -78,7 +78,8 @@ class CardRestaurant extends StatelessWidget {
             const SizedBox(
               width: 4,
             ),
-            Text(restaurantElement.rating.toString())
+            Text(restaurantElement.rating.toString()),
+            const SizedBox(width: 8,),
           ],
         ),
       ),

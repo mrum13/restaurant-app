@@ -188,7 +188,12 @@ class DetailPage extends StatelessWidget {
                                   const SizedBox(
                                     width: 4,
                                   ),
-                                  Text(data.result.rating.toString())
+                                  Text(data.result.rating.toString()),
+                                  const SizedBox(width: 12,),
+                                  Icon(
+                                    Icons.favorite_border,
+                                    color: Colors.grey,
+                                  )
                                 ],
                               )
                             ],
