@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:restaurant_app/common/shared_prefrences.dart';
 import 'package:restaurant_app/provider/list_restaurant_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -16,6 +18,8 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
+    initializeSP();
+
     controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3),
@@ -30,6 +34,12 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
         });
       });
     controller.forward();
+
+    
+  }
+
+  void initializeSP() async {
+    SharedPreference.favoriteRestaurant = await SharedPreferences.getInstance();
   }
 
   @override

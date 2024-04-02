@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/common/common_url.dart';
-import 'package:restaurant_app/model/restaurant.dart';
+import 'package:restaurant_app/model/favorite_restaurant.dart';
 import 'package:restaurant_app/provider/detail_restaurant_provider.dart';
 import 'package:restaurant_app/provider/favorite_icon_provider.dart';
 
-class CardRestaurant extends StatelessWidget {
-  final RestaurantElement restaurantElement;
+class CardFavorite extends StatelessWidget {
+  final FavoriteRestaurantData restaurantElement;
 
-  const CardRestaurant({
+  const CardFavorite({
     super.key,
     required this.restaurantElement
   });

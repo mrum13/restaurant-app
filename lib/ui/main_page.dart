@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:restaurant_app/provider/get_favorite_restaurant_provider.dart';
 import 'package:restaurant_app/provider/navbar_provider.dart';
+import 'package:restaurant_app/ui/favorite_page.dart';
 import 'package:restaurant_app/ui/home_page.dart';
 import 'package:restaurant_app/widgets/custom_bottom_navigation_item.dart';
 
@@ -13,8 +15,8 @@ class MainPage extends StatelessWidget {
       switch (currentIndex) {
         case 0:
           return const HomePage();
-        case 1:
-          return const Scaffold(body: Center(child: Text("Favorite Page"),),);
+        case 1: 
+          return const FavoritePage();
         case 2:
           return const Scaffold(body: Center(child: Text("Settings Page"),),);
         default:

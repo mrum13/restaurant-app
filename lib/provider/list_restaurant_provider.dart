@@ -6,10 +6,6 @@ enum ResultState { loading, noData, hasData, error, init }
 
 class ListRestaurantProvider extends ChangeNotifier {
 
-  // ListRestaurantProvider() {
-  //   fetchListRestaurant();
-  // }
-
   late Restaurant _restaurant;
   ResultState _state = ResultState.init;
   String _message = '';

@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_app/common/common_url.dart';
 import 'package:restaurant_app/model/detail_restaurant.dart';
 import 'package:restaurant_app/provider/detail_restaurant_provider.dart';
+import 'package:restaurant_app/provider/favorite_icon_provider.dart';
+import 'package:restaurant_app/provider/set_favorite_restaurant_provider.dart';
 import 'package:restaurant_app/widgets/card_facility.dart';
 
 class DetailPage extends StatelessWidget {
@@ -26,6 +28,8 @@ class DetailPage extends StatelessWidget {
     ];
 
     final random = new Random();
+
+    String id = "-";
 
     Widget buildTileFood(Foods foodMenu) {
       return Container(
@@ -127,11 +131,16 @@ class DetailPage extends StatelessWidget {
           children: [
             Consumer(
                 builder: (context, DetailRestaurantProvider data, snapshot) {
-              if (data.state == ResultState.loading) {
+              if (data.state == DetailRestaurantState.loading) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
-              } else if (data.state == ResultState.hasData) {
+              } else if (data.state == DetailRestaurantState.hasData) {
+                id = data.result.id!;
+
+                bool statusFavorite = Provider.of<FavoriteIconProvider>(context, listen: false).imageState;
+
+
                 return Column(
                   children: [
                     Image.network(
@@ -190,14 +199,26 @@ class DetailPage extends StatelessWidget {
                                   ),
                                   Text(data.result.rating.toString()),
                                   const SizedBox(width: 12,),
-                                  InkWell(
-                                    onTap: () {
-                                      
-                                    },
-                                    child: Icon(
-                                      Icons.favorite_border,
-                                      color: Colors.grey,
-                                    ),
+                                  Consumer<SetFavoriteRestaurantProvider>(
+                                    builder: (context, SetFavoriteRestaurantProvider data, snapshot) {
+                                      if (data.state == ResultStateFavorite.hasData) {
+                                        if (data.result) {
+                                          statusFavorite =true;
+                                        } else {
+                                          statusFavorite =false;
+                                        }
+                                        
+                                      } 
+                                      return InkWell(
+                                        onTap: () {
+                                          context.read<SetFavoriteRestaurantProvider>().setFavoriteRestaurant(id: id);
+                                        },
+                                        child: Icon(
+                                          Icons.favorite,
+                                          color: statusFavorite?Colors.red:Colors.grey,
+                                        ),
+                                      );
+                                    }
                                   )
                                 ],
                               )
