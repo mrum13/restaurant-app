@@ -5,23 +5,24 @@ import 'package:restaurant_app/services/api_services.dart';
 enum ResultState { loading, noData, hasData, error, init }
 
 class ListRestaurantProvider extends ChangeNotifier {
-
-  late Restaurant _restaurant;
+  ///state
   ResultState _state = ResultState.init;
-  String _message = '';
- 
-  String get message => _message;
- 
-  Restaurant get result => _restaurant;
- 
   ResultState get state => _state;
- 
+
+  ///data
+  Restaurant _restaurant = Restaurant(restaurants: []);
+  Restaurant get result => _restaurant;
+
+  ///message error
+  String _message = '';
+  String get message => _message;
+
   Future<dynamic> fetchListRestaurant() async {
     try {
       _state = ResultState.loading;
       notifyListeners();
       final restaurantData = await ApiServices().getListRestaurant();
-      if (restaurantData.restaurants.isEmpty) {
+      if (restaurantData.restaurants!.isEmpty) {
         _state = ResultState.noData;
         notifyListeners();
         return _message = 'Empty Data';

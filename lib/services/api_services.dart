@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:restaurant_app/common/common_url.dart';
+import 'package:restaurant_app/common/file_helper.dart';
 import 'package:restaurant_app/common/shared_prefrences.dart';
 import 'package:restaurant_app/model/detail_restaurant.dart';
 import 'package:restaurant_app/model/favorite_restaurant.dart';
@@ -11,24 +12,21 @@ import 'package:http/http.dart' as http;
 import 'package:restaurant_app/model/searched_restaurant.dart';
 
 class ApiServices {
-  Future<Restaurant> getListRestaurant() async {
-    final connectivityResult = await (Connectivity().checkConnectivity());
+  var client = http.Client();
 
-    if (connectivityResult == ConnectivityResult.none) {
-      throw "Terdapat masalah pada jaringan";
-    } else {
-      try {
+  Future<Restaurant> getListRestaurant() async {
+    try {
         var url = '$baseUrl/list';
         var header = {
           'Accept': 'application/json',
         };
-        var response = await http.get(
+        var response = await client.get(
           Uri.parse(url),
           headers: header,
         );
         var data = jsonDecode(response.body);
 
-        print("Status code list data : ${response.statusCode}");
+        debugPrint("Status code list data : ${response.statusCode}");
 
         if (response.statusCode == 200) {
           return Restaurant.fromJson(data);
@@ -36,9 +34,9 @@ class ApiServices {
           throw data['message'];
         }
       } catch (e) {
+        debugPrint(e.toString());
         rethrow;
       }
-    }
   }
 
   Future<SearchedRestaurant> searchRestaurant({required String value}) async {
@@ -125,8 +123,6 @@ class ApiServices {
         if (response.statusCode == 200) {
           var dataResult = jsonDecode(response.body)['restaurant'];
 
-          // List<FavoriteRestaurantData> listData = [];
-
           List<FavoriteRestaurantData> listDataGet =
               await getFavoriteRestaurant();
 
@@ -134,12 +130,17 @@ class ApiServices {
               listDataGet.any((restaurant) => restaurant.id == id);
 
           if (isAlreadyFavorite) {
-            listDataGet.removeWhere((element) => element.id==id);
+            listDataGet.removeWhere((element) => element.id == id);
             String dataToSave = jsonEncode(listDataGet);
             SharedPreference.favoriteRestaurant
                 ?.setString("favorite-restaurant", dataToSave);
             return false;
           } else {
+            dataResult['pictureId'] = await downloadAndSaveImage(
+                  url: "$imageUrlMedium/${dataResult['pictureId']}",
+                  title: dataResult['id'],
+                  subtitle: dataResult['name']);
+
             listDataGet.add(FavoriteRestaurantData.fromJson(dataResult));
 
             String dataToSave = jsonEncode(listDataGet);
@@ -179,8 +180,9 @@ class ApiServices {
   Future<bool> checkIsFavorite({required String id}) async {
     List<FavoriteRestaurantData> listDataGet = await getFavoriteRestaurant();
 
-    bool isAlreadyFavorite =listDataGet.any((restaurant) => restaurant.id == id);
+    bool isAlreadyFavorite =
+        listDataGet.any((restaurant) => restaurant.id == id);
 
     return isAlreadyFavorite;
-  } 
+  }
 }

@@ -8,13 +8,13 @@ class Restaurant {
     bool? error;
     String? message;
     int? count;
-    List<RestaurantElement> restaurants;
+    List<RestaurantElement>? restaurants;
 
     Restaurant({
         this.error,
         this.message,
         this.count,
-        required this.restaurants,
+        this.restaurants = const [],
     });
 
     factory Restaurant.fromJson(Map<String, dynamic> json) => Restaurant(
@@ -28,7 +28,7 @@ class Restaurant {
         "error": error,
         "message": message,
         "count": count,
-        "restaurants": List<RestaurantElement>.from(restaurants.map((x) => x.toJson())),
+        "restaurants": List<RestaurantElement>.from(restaurants!.map((x) => x.toJson())),
     };
 }
 

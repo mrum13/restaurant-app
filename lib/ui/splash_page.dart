@@ -40,6 +40,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
   void initializeSP() async {
     SharedPreference.favoriteRestaurant = await SharedPreferences.getInstance();
+    SharedPreference.scheduledSetting = await SharedPreferences.getInstance();
   }
 
   @override

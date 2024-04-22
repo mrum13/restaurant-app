@@ -2,4 +2,5 @@
 
 class SharedPreference {
   static var favoriteRestaurant;
+  static var scheduledSetting;
 }

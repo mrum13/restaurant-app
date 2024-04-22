@@ -138,8 +138,11 @@ class DetailPage extends StatelessWidget {
               } else if (data.state == DetailRestaurantState.hasData) {
                 id = data.result.id!;
 
-                bool statusFavorite = Provider.of<FavoriteIconProvider>(context, listen: false).imageState;
+                bool statusFavorite =
+                    Provider.of<FavoriteIconProvider>(context, listen: false)
+                        .imageState;
 
+                debugPrint("is Favorite = $statusFavorite");
 
                 return Column(
                   children: [
@@ -198,24 +201,30 @@ class DetailPage extends StatelessWidget {
                                     width: 4,
                                   ),
                                   Text(data.result.rating.toString()),
-                                  const SizedBox(width: 12,),
+                                  const SizedBox(
+                                    width: 12,
+                                  ),
                                   Consumer<SetFavoriteRestaurantProvider>(
                                     builder: (context, SetFavoriteRestaurantProvider data, snapshot) {
-                                      if (data.state == ResultStateFavorite.hasData) {
-                                        if (data.result) {
-                                          statusFavorite =true;
-                                        } else {
-                                          statusFavorite =false;
-                                        }
-                                        
-                                      } 
+                                      if (data.state==ResultStateFavorite.hasData) {
+                                        context.read<FavoriteIconProvider>().isFavorite(id: id);
+                                      }
                                       return InkWell(
                                         onTap: () {
-                                          context.read<SetFavoriteRestaurantProvider>().setFavoriteRestaurant(id: id);
+                                          context
+                                              .read<SetFavoriteRestaurantProvider>()
+                                              .setFavoriteRestaurant(id: id);
                                         },
-                                        child: Icon(
-                                          Icons.favorite,
-                                          color: statusFavorite?Colors.red:Colors.grey,
+                                        child: Consumer<FavoriteIconProvider>(
+                                          builder: (context, FavoriteIconProvider data, snapshot) {
+                                            debugPrint("state icon = ${data.imageState}");
+                                            return Icon(
+                                              Icons.favorite,
+                                              color: data.imageState
+                                                  ? Colors.red
+                                                  : Colors.grey,
+                                            );
+                                          }
                                         ),
                                       );
                                     }

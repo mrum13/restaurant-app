@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_app/provider/get_favorite_restaurant_provider.dart';
 import 'package:restaurant_app/provider/navbar_provider.dart';
-import 'package:restaurant_app/ui/favorite_page.dart';
-import 'package:restaurant_app/ui/home_page.dart';
+import 'package:restaurant_app/ui/favorite/favorite_page.dart';
+import 'package:restaurant_app/ui/home/home_page.dart';
+import 'package:restaurant_app/ui/settings/setting_page.dart';
 import 'package:restaurant_app/widgets/custom_bottom_navigation_item.dart';
 
-class MainPage extends StatelessWidget {
+class MainPage extends StatefulWidget {
   const MainPage({super.key});
+
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
+  
+   @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +34,7 @@ class MainPage extends StatelessWidget {
         case 1: 
           return const FavoritePage();
         case 2:
-          return const Scaffold(body: Center(child: Text("Settings Page"),),);
+          return const SettingPage();
         default:
           return const HomePage();
       }

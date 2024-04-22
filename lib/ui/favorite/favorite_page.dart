@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/provider/get_favorite_restaurant_provider.dart';
-import 'package:restaurant_app/provider/result_state.dart';
 import 'package:restaurant_app/widgets/card_favorite.dart';
 
 class FavoritePage extends StatefulWidget {
@@ -62,8 +61,10 @@ class _FavoritePageState extends State<FavoritePage> {
                   child: Text(data.message),
                 );
               } else if (data.state == FavoriteRestaurantState.noData) {
-                return const Center(
-                  child: Text("Data Kosong"),
+                return const Expanded(
+                  child: Center(
+                    child: Text("Data Kosong"),
+                  ),
                 );
               } else {
                 return const Center(

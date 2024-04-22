@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         var dataRestaurant =
-                            data.result.restaurants[index];
+                            data.result.restaurants![index];
                         return CardRestaurant(
                           restaurantElement: dataRestaurant,
                         );
@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                       separatorBuilder: (context, index) => const SizedBox(
                             height: 16,
                           ),
-                      itemCount: data.result.restaurants.length);
+                      itemCount: data.result.restaurants!.length);
                   } else if (data.state == ResultState.error) {
                     if (data.message.toString().contains("jaringan")) {
                         return CardNoNetwork(message: data.message,);

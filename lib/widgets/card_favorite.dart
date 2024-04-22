@@ -1,6 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_app/common/common_url.dart';
+import 'package:restaurant_app/common/file_helper.dart';
 import 'package:restaurant_app/model/favorite_restaurant.dart';
 import 'package:restaurant_app/provider/detail_restaurant_provider.dart';
 import 'package:restaurant_app/provider/favorite_icon_provider.dart';
@@ -8,18 +10,20 @@ import 'package:restaurant_app/provider/favorite_icon_provider.dart';
 class CardFavorite extends StatelessWidget {
   final FavoriteRestaurantData restaurantElement;
 
-  const CardFavorite({
-    super.key,
-    required this.restaurantElement
-  });
+  const CardFavorite({super.key, required this.restaurantElement});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.read<DetailRestaurantProvider>().fetchDetailRestaurant(id: restaurantElement.id!);
-        context.read<FavoriteIconProvider>().isFavorite(id: restaurantElement.id!);
-        Navigator.pushNamed(context, '/detail');
+        context
+            .read<DetailRestaurantProvider>()
+            .fetchDetailRestaurant(id: restaurantElement.id!);
+        context
+            .read<FavoriteIconProvider>()
+            .isFavorite(id: restaurantElement.id);
+        Navigator.pushNamed(context, '/detail-favorite',
+            arguments: restaurantElement.id);
       },
       child: Container(
         padding: const EdgeInsets.all(10),
@@ -31,12 +35,22 @@ class CardFavorite extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(16),
-              child: Image.network(
-                "$imageUrlMedium/${restaurantElement.pictureId}",
-                height: 70,
-                width: 70,
-                fit: BoxFit.fill,
-              ),
+              child: FutureBuilder(
+                  future: openImage(
+                      title: restaurantElement.id,
+                      subtitle: restaurantElement.name),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return Image.file(
+                        File(restaurantElement.pictureId),
+                        height: 70,
+                        width: 70,
+                        fit: BoxFit.fill,
+                      );
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  }),
             ),
             const SizedBox(
               width: 16,
@@ -47,8 +61,8 @@ class CardFavorite extends StatelessWidget {
                 children: [
                   Text(
                     restaurantElement.name,
-                    style:
-                        const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(
                     height: 4,
@@ -65,14 +79,17 @@ class CardFavorite extends StatelessWidget {
                       ),
                       Text(
                         restaurantElement.city!,
-                        style: const TextStyle(color: Colors.grey, fontSize: 12),
+                        style:
+                            const TextStyle(color: Colors.grey, fontSize: 12),
                       )
                     ],
                   )
                 ],
               ),
             ),
-            const SizedBox(width: 8,),
+            const SizedBox(
+              width: 8,
+            ),
             Icon(
               Icons.star,
               color: Colors.amber[400],
@@ -81,7 +98,9 @@ class CardFavorite extends StatelessWidget {
               width: 4,
             ),
             Text(restaurantElement.rating.toString()),
-            const SizedBox(width: 8,),
+            const SizedBox(
+              width: 8,
+            ),
           ],
         ),
       ),
