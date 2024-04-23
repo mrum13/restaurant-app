@@ -7,15 +7,16 @@ import 'package:restaurant_app/common/file_helper.dart';
 import 'package:restaurant_app/model/favorite_restaurant.dart';
 import 'package:restaurant_app/provider/favorite_icon_provider.dart';
 import 'package:restaurant_app/provider/get_favorite_restaurant_provider.dart';
+import 'package:restaurant_app/provider/set_favorite_restaurant_provider.dart';
 import 'package:restaurant_app/widgets/card_facility.dart';
 
 class DetailFavoritePage extends StatelessWidget {
-
   const DetailFavoritePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final String indexData = ModalRoute.of(context)!.settings.arguments as String;
+    final String indexData =
+        ModalRoute.of(context)!.settings.arguments as String;
     var listPictureDrink = [
       'assets/img_minuman_1.png',
       'assets/img_minuman_2.png',
@@ -131,40 +132,38 @@ class DetailFavoritePage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Stack(
           children: [
-            Consumer(
-                builder: (context, GetFavoriteRestaurantProvider data, snapshot) {
+            Consumer(builder:
+                (context, GetFavoriteRestaurantProvider data, snapshot) {
               if (data.state == FavoriteRestaurantState.loading) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
               } else if (data.state == FavoriteRestaurantState.hasData) {
                 List<FavoriteRestaurantData> listData = data.result;
-                int indexDataDetail = listData.indexWhere((element) => element.id==indexData);
+                int indexDataDetail =
+                    listData.indexWhere((element) => element.id == indexData);
 
                 id = listData[indexDataDetail].id;
-
-                bool statusFavorite =
-                    Provider.of<FavoriteIconProvider>(context, listen: false)
-                        .imageState;
-
-                debugPrint("is Favorite = $statusFavorite");
 
                 return Column(
                   children: [
                     FutureBuilder(
-                future: openImage(title: id, subtitle: listData[indexDataDetail].name),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState==ConnectionState.done) {
-                    return Image.file(File(listData[indexDataDetail].pictureId),
-                    fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: 300,
-                  );
-                  } else {
-                    return const CircularProgressIndicator();
-                  }
-                }
-              ),
+                        future: openImage(
+                            title: id,
+                            subtitle: listData[indexDataDetail].name),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            return Image.file(
+                              File(listData[indexDataDetail].pictureId),
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: 300,
+                            );
+                          } else {
+                            return const CircularProgressIndicator();
+                          }
+                        }),
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
@@ -213,10 +212,54 @@ class DetailFavoritePage extends StatelessWidget {
                                   const SizedBox(
                                     width: 4,
                                   ),
-                                  Text(listData[indexDataDetail].rating.toString()),
-                                  
+                                  Text(listData[indexDataDetail]
+                                      .rating
+                                      .toString()),
+                                  const SizedBox(
+                                    width: 12,
+                                  ),
+                                  Consumer<SetFavoriteRestaurantProvider>(
+                                      builder: (context,
+                                          SetFavoriteRestaurantProvider data,
+                                          snapshot) {
+                                    if (data.state ==
+                                        ResultStateFavorite.hasData) {
+                                      context
+                                          .read<FavoriteIconProvider>()
+                                          .isFavorite(id: id);
+                                    }
+
+                                    return InkWell(
+                                      onTap: () {
+                                        context
+                                            .read<
+                                                SetFavoriteRestaurantProvider>()
+                                            .setFavoriteRestaurant(id: id);
+                                      },
+                                      child: Consumer<FavoriteIconProvider>(
+                                          builder: (context,
+                                              FavoriteIconProvider data,
+                                              snapshot) {
+                                        if (!data.imageState) {
+                                          Future.delayed(Duration(seconds: 1),
+                                              () {
+                                            context
+                                                .read<
+                                                    GetFavoriteRestaurantProvider>()
+                                                .deleteRestaurant();
+                                          });
+                                        }
+                                        return Icon(
+                                          Icons.favorite,
+                                          color: data.imageState
+                                              ? Colors.red
+                                              : Colors.grey,
+                                        );
+                                      }),
+                                    );
+                                  })
                                 ],
-                              )
+                              ),
                             ],
                           ),
                           const SizedBox(
@@ -273,7 +316,9 @@ class DetailFavoritePage extends StatelessWidget {
                                 crossAxisSpacing: 12,
                                 mainAxisSpacing: 12,
                                 crossAxisCount: 2,
-                                children: listData[indexDataDetail].menus.foods
+                                children: listData[indexDataDetail]
+                                    .menus
+                                    .foods
                                     .map(buildTileFood)
                                     .toList(),
                               )
@@ -298,7 +343,9 @@ class DetailFavoritePage extends StatelessWidget {
                                 crossAxisSpacing: 12,
                                 mainAxisSpacing: 12,
                                 crossAxisCount: 2,
-                                children: listData[indexDataDetail].menus.drinks
+                                children: listData[indexDataDetail]
+                                    .menus
+                                    .drinks
                                     .map(buildTileDrink)
                                     .toList(),
                               )
@@ -309,6 +356,13 @@ class DetailFavoritePage extends StatelessWidget {
                     )
                   ],
                 );
+              } else if (data.state == FavoriteRestaurantState.deleted) {
+                Future.delayed(Duration.zero, () {
+                  Navigator.pop(context);
+                  
+                });
+
+                return const SizedBox();
               } else {
                 return Center(
                   child: Text(data.message),

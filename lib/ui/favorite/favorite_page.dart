@@ -14,8 +14,11 @@ class _FavoritePageState extends State<FavoritePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    // getFavoriteRestaurant();
+  }
+
+  void getFavoriteRestaurant() {
     Future.delayed(Duration.zero, () {
       // Panggil getFavoriteRestaurant() setelah build widget selesai
       context.read<GetFavoriteRestaurantProvider>().getFavoriteRestaurant();
@@ -24,6 +27,7 @@ class _FavoritePageState extends State<FavoritePage> {
 
   @override
   Widget build(BuildContext context) {
+    getFavoriteRestaurant();
     return Scaffold(
       body: SafeArea(
         child: 
@@ -65,6 +69,14 @@ class _FavoritePageState extends State<FavoritePage> {
                   child: Center(
                     child: Text("Data Kosong"),
                   ),
+                );
+              } else if (data.state == FavoriteRestaurantState.deleted) {
+                Future.delayed(Duration(seconds: 1), () {
+                  context.read<GetFavoriteRestaurantProvider>().getFavoriteRestaurant();
+                  
+                });
+                return const Center(
+                  child: CircularProgressIndicator(),
                 );
               } else {
                 return const Center(

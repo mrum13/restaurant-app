@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_app/model/favorite_restaurant.dart';
 import 'package:restaurant_app/services/api_services.dart';
 
-enum FavoriteRestaurantState { loading, noData, hasData, error, init }
+enum FavoriteRestaurantState { loading, noData, hasData, error, init, deleted }
 
 class GetFavoriteRestaurantProvider extends ChangeNotifier {
 
@@ -37,5 +37,10 @@ class GetFavoriteRestaurantProvider extends ChangeNotifier {
       notifyListeners();
       return _message = 'Error --> $e';
     }
+  }
+
+  void deleteRestaurant() async {
+     _state = FavoriteRestaurantState.deleted;
+      notifyListeners();
   }
 }
